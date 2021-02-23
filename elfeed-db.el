@@ -520,9 +520,9 @@ Runs `elfeed-db-unload-hook' after unloading the database."
             (when (null elfeed-ref-cache)
               (with-temp-buffer
                 (insert-file-contents archive-file)
-                (setf elfeed-ref-cache (buffer-string)))
-              ;; Clear cache on next turn.
-              (run-at-time 0 nil (lambda () (setf elfeed-ref-cache nil))))
+                ;; Create cache to avoid loading the archive everytime an entry
+                ;; is opened. It is cleared out in `elfeed-db-pack'
+                (setf elfeed-ref-cache (buffer-string))))
             (substring elfeed-ref-cache (car index) (cdr index)))
         (let ((file (elfeed-ref--file ref)))
           (when (file-exists-p file)
